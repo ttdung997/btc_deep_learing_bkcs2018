@@ -128,6 +128,8 @@ LSTM_test_inputs = [np.array(LSTM_test_inputs) for LSTM_test_inputs in LSTM_test
 LSTM_test_inputs = np.array(LSTM_test_inputs)
 # print(LSTM_test_inputs)
 
+print(LSTM_test_inputs[-1])
+
 np.random.seed(202)
 
 eth_model = build_model(LSTM_training_inputs, output_size=1, neurons = 20)
@@ -139,12 +141,53 @@ eth_model = build_model(LSTM_training_inputs, output_size=1, neurons = 20)
 # eth_history = eth_model.fit(LSTM_training_inputs, LSTM_training_outputs, 
 #                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-LSTM_training_close_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
-eth_close_model =eth_model
-eth_history = eth_close_model.fit(LSTM_training_inputs, LSTM_training_close_outputs, 
+LSTM_training_eth_Close_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
+eth_Close_model =eth_model
+eth_history = eth_Close_model.fit(LSTM_training_inputs, LSTM_training_eth_Close_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 
+# LSTM_training_eth_Volume_outputs = (training_set['eth_Volume'][window_len:].values/training_set['eth_Volume'][:-window_len].values)-1
+# eth_Volume_model =eth_model
+# eth_history = eth_Volume_model.fit(LSTM_training_inputs, LSTM_training_eth_Volume_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+# LSTM_training_eth_close_off_high_outputs = (training_set['eth_close_off_high'][window_len:].values/training_set['eth_close_off_high'][:-window_len].values)-1
+# eth_close_off_high_model =eth_model
+# eth_history = eth_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_eth_close_off_high_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+# LSTM_training_eth_volatility_outputs = (training_set['eth_volatility'][window_len:].values/training_set['eth_volatility'][:-window_len].values)-1
+# eth_volatility_model =eth_model
+# eth_history = eth_volatilityeth_close_model.fit(LSTM_training_inputs, LSTM_training_eth_volatility_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+
+# LSTM_training_bt_Close_outputs = (training_set['bt_Close'][window_len:].values/training_set['bt_Close'][:-window_len].values)-1
+# bt_Close_model =bt_model
+# bt_history = bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+
+# LSTM_training_bt_Volume_outputs = (training_set['bt_Volume'][window_len:].values/training_set['bt_Volume'][:-window_len].values)-1
+# bt_Volume_model =bt_model
+# bt_history = bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+# LSTM_training_bt_close_off_high_outputs = (training_set['bt_close_off_high'][window_len:].values/training_set['bt_close_off_high'][:-window_len].values)-1
+# bt_close_off_high_model =bt_model
+# bt_history = bt_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_bt_close_off_high_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+# LSTM_training_bt_volatility_outputs = (training_set['bt_volatility'][window_len:].values/training_set['bt_volatility'][:-window_len].values)-1
+# bt_volatility_model =bt_model
+# bt_history = bt_volatilitybt_close_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
+#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+
+
+
+
+print(eth_Close_model.predict(LSTM_test_inputs))
 
 
 predict_date=pd.read_csv('date.csv')
@@ -155,9 +198,9 @@ ax1.set_xticklabels([datetime.date(2018,i+1,1).strftime('%b %d %Y')  for i in ra
 # ax1.plot(model_data[model_data['Date']>= split_date]['Date'][window_len:].astype(datetime.datetime),
 #          test_set['eth_Close'][window_len:], label='Actual')
 ax1.plot(predict_date.tail(53)['date'].astype(datetime.datetime),
-         ((np.transpose(eth_close_model.predict(LSTM_test_inputs))+1) * test_set['eth_Close'].values[:-window_len])[0], 
+         ((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1) * test_set['eth_Close'].values[:-window_len])[0], 
          label='Predicted')
-ax1.annotate('MAE: %.4f'%np.mean(np.abs((np.transpose(eth_close_model.predict(LSTM_test_inputs))+1)-\
+ax1.annotate('MAE: %.4f'%np.mean(np.abs((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1)-\
             (test_set['eth_Close'].values[window_len:])/(test_set['eth_Close'].values[:-window_len]))), 
              xy=(0.75, 0.9),  xycoords='axes fraction',
             xytext=(0.75, 0.9), textcoords='axes fraction')
