@@ -118,6 +118,7 @@ for i in range(len(test_set)-window_len):
         temp_set.loc[:, col] = temp_set[col]/temp_set[col].iloc[0] - 1
     # print(temp_set)
     LSTM_test_inputs.append(temp_set)
+    # LSTM_last_input=temp_set
     # print (LSTM_test_inputs)
 LSTM_test_outputs = (test_set['eth_Close'][window_len:].values/test_set['eth_Close'][:-window_len].values)-1
 
@@ -126,13 +127,13 @@ LSTM_training_inputs = np.array(LSTM_training_inputs)
  # print(LSTM_training_inputs)
 LSTM_test_inputs = [np.array(LSTM_test_inputs) for LSTM_test_inputs in LSTM_test_inputs]
 LSTM_test_inputs = np.array(LSTM_test_inputs)
-# print(LSTM_test_inputs)
 
-print(LSTM_test_inputs[-1])
+
 
 np.random.seed(202)
 
 eth_model = build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+bt_model = eth_model
 # model output is next price normalised to 10th previous closing price
 # LSTM_training_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
 # train model on data
@@ -140,73 +141,125 @@ eth_model = build_model(LSTM_training_inputs, output_size=1, neurons = 20)
 # note: eth_history contains information on the training error per epoch
 # eth_history = eth_model.fit(LSTM_training_inputs, LSTM_training_outputs, 
 #                             epochs=10, batch_size=1, verbose=2, shuffle=True)
-
+print("this is eth_Close model")
 LSTM_training_eth_Close_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
 eth_Close_model =eth_model
 eth_history = eth_Close_model.fit(LSTM_training_inputs, LSTM_training_eth_Close_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-
-# LSTM_training_eth_Volume_outputs = (training_set['eth_Volume'][window_len:].values/training_set['eth_Volume'][:-window_len].values)-1
-# eth_Volume_model =eth_model
-# eth_history = eth_Volume_model.fit(LSTM_training_inputs, LSTM_training_eth_Volume_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+print("this is eth_Volume model")
+LSTM_training_eth_Volume_outputs = (training_set['eth_Volume'][window_len:].values/training_set['eth_Volume'][:-window_len].values)-1
+eth_Volume_model =eth_model
+eth_history = eth_Volume_model.fit(LSTM_training_inputs, LSTM_training_eth_Volume_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 # LSTM_training_eth_close_off_high_outputs = (training_set['eth_close_off_high'][window_len:].values/training_set['eth_close_off_high'][:-window_len].values)-1
 # eth_close_off_high_model =eth_model
 # eth_history = eth_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_eth_close_off_high_outputs, 
 #                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+print("this is eth_volatility model")
+LSTM_training_eth_volatility_outputs = (training_set['eth_volatility'][window_len:].values/training_set['eth_volatility'][:-window_len].values)-1
+eth_volatility_model =eth_model
+eth_history = eth_volatility_model.fit(LSTM_training_inputs, LSTM_training_eth_volatility_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-# LSTM_training_eth_volatility_outputs = (training_set['eth_volatility'][window_len:].values/training_set['eth_volatility'][:-window_len].values)-1
-# eth_volatility_model =eth_model
-# eth_history = eth_volatilityeth_close_model.fit(LSTM_training_inputs, LSTM_training_eth_volatility_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+print("this is bt_Close model")
+LSTM_training_bt_Close_outputs = (training_set['bt_Close'][window_len:].values/training_set['bt_Close'][:-window_len].values)-1
+bt_Close_model =bt_model
+bt_history = bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-
-# LSTM_training_bt_Close_outputs = (training_set['bt_Close'][window_len:].values/training_set['bt_Close'][:-window_len].values)-1
-# bt_Close_model =bt_model
-# bt_history = bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-
-# LSTM_training_bt_Volume_outputs = (training_set['bt_Volume'][window_len:].values/training_set['bt_Volume'][:-window_len].values)-1
-# bt_Volume_model =bt_model
-# bt_history = bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+print("this is bt_Volume model")
+LSTM_training_bt_Volume_outputs = (training_set['bt_Volume'][window_len:].values/training_set['bt_Volume'][:-window_len].values)-1
+bt_Volume_model =bt_model
+bt_history = bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 # LSTM_training_bt_close_off_high_outputs = (training_set['bt_close_off_high'][window_len:].values/training_set['bt_close_off_high'][:-window_len].values)-1
 # bt_close_off_high_model =bt_model
 # bt_history = bt_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_bt_close_off_high_outputs, 
 #                             epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-# LSTM_training_bt_volatility_outputs = (training_set['bt_volatility'][window_len:].values/training_set['bt_volatility'][:-window_len].values)-1
-# bt_volatility_model =bt_model
-# bt_history = bt_volatilitybt_close_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-
+# print("this is bt_volatility model")
+LSTM_training_bt_volatility_outputs = (training_set['bt_volatility'][window_len:].values/training_set['bt_volatility'][:-window_len].values)-1
+bt_volatility_model =bt_model
+bt_history = bt_volatility_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 
-print(eth_Close_model.predict(LSTM_test_inputs))
 
 
-predict_date=pd.read_csv('date.csv')
+LSTM_last_input = LSTM_test_inputs[-1]
+LSTM_last_input.shape = (1,10,8)
 
-fig, ax1 = plt.subplots(1,1)
-ax1.set_xticks([datetime.date(2018,i+1,1) for i in range(12)])
-ax1.set_xticklabels([datetime.date(2018,i+1,1).strftime('%b %d %Y')  for i in range(12)])
-# ax1.plot(model_data[model_data['Date']>= split_date]['Date'][window_len:].astype(datetime.datetime),
-#          test_set['eth_Close'][window_len:], label='Actual')
-ax1.plot(predict_date.tail(53)['date'].astype(datetime.datetime),
-         ((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1) * test_set['eth_Close'].values[:-window_len])[0], 
-         label='Predicted')
-ax1.annotate('MAE: %.4f'%np.mean(np.abs((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1)-\
-            (test_set['eth_Close'].values[window_len:])/(test_set['eth_Close'].values[:-window_len]))), 
-             xy=(0.75, 0.9),  xycoords='axes fraction',
-            xytext=(0.75, 0.9), textcoords='axes fraction')
-ax1.set_title('Test Set: Single Timepoint Prediction',fontsize=13)
-ax1.set_ylabel('Ethereum Price ($)',fontsize=12)
-ax1.legend(bbox_to_anchor=(0.1, 1), loc=2, borderaxespad=0., prop={'size': 14})
-plt.show()
+New_input = LSTM_last_input
+# print(New_input)
+# print(New_input[0][9])
+New_eth_Close =eth_Close_model.predict(LSTM_last_input)
+
+New_eth_Volume =eth_Volume_model.predict(LSTM_last_input)
+
+# New_eth_close_off_high =eth_close_off_high_model.predict(LSTM_last_input)
+
+New_eth_volatilityeth =eth_volatility_model.predict(LSTM_last_input)
+
+New_bt_Close =bt_Close_model.predict(LSTM_last_input)
+
+New_bt_Volume =bt_Volume_model.predict(LSTM_last_input)
+
+# New_bt_close_off_high =bt_close_off_high_model.predict(LSTM_last_input)
+
+New_bt_volatilitybt_close =bt_volatility_model.predict(LSTM_last_input)
+
+New_input[0][9][0] = New_eth_Close
+
+New_input[0][9][1] = New_eth_Volume
+
+New_input[0][9][2] = -0.560641
+
+New_input[0][9][3] = New_eth_volatilityeth
+
+New_input[0][9][4] = New_bt_Close
+
+New_input[0][9][5] = New_bt_Volume
+
+New_input[0][9][6] = -0.560641
+
+New_input[0][9][7] =New_bt_volatilitybt_close
+
+print(New_input)
+print(eth_Close_model.predict(New_input))
+
+
+# # print(LSTM_test_inputs[-1])
+# print("this is total test")
+# print(LSTM_test_inputs)
+# print("this is the total predict")
+# print(eth_Close_model.predict(LSTM_test_inputs)) 
+
+# print("this is the last test")
+# print(LSTM_last_input)
+# print("this is the last predict")
+# print(eth_Close_model.predict(LSTM_last_input))
+
+
+
+# predict_date=pd.read_csv('date.csv')
+
+# fig, ax1 = plt.subplots(1,1)
+# ax1.set_xticks([datetime.date(2018,i+1,1) for i in range(12)])
+# ax1.set_xticklabels([datetime.date(2018,i+1,1).strftime('%b %d %Y')  for i in range(12)])
+# # ax1.plot(model_data[model_data['Date']>= split_date]['Date'][window_len:].astype(datetime.datetime),
+# #          test_set['eth_Close'][window_len:], label='Actual')
+# ax1.plot(predict_date.tail(53)['date'].astype(datetime.datetime),
+#          ((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1) * test_set['eth_Close'].values[:-window_len])[0], 
+#          label='Predicted')
+# ax1.annotate('MAE: %.4f'%np.mean(np.abs((np.transpose(eth_Close_model.predict(LSTM_test_inputs))+1)-\
+#             (test_set['eth_Close'].values[window_len:])/(test_set['eth_Close'].values[:-window_len]))), 
+#              xy=(0.75, 0.9),  xycoords='axes fraction',
+#             xytext=(0.75, 0.9), textcoords='axes fraction')
+# ax1.set_title('Test Set: Single Timepoint Prediction',fontsize=13)
+# ax1.set_ylabel('Ethereum Price ($)',fontsize=12)
+# ax1.legend(bbox_to_anchor=(0.1, 1), loc=2, borderaxespad=0., prop={'size': 14})
+# plt.show()
 
 
