@@ -11,6 +11,9 @@ from keras.models import Sequential
 from keras.layers import Activation, Dense
 from keras.layers import LSTM
 from keras.layers import Dropout
+from keras.models import model_from_json
+from keras.preprocessing import sequence
+from scipy import interp
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 
@@ -118,7 +121,7 @@ for i in range(len(test_set)-window_len):
         temp_set.loc[:, col] = temp_set[col]/temp_set[col].iloc[0] - 1
     # print(temp_set)
     LSTM_test_inputs.append(temp_set)
-    # LSTM_last_input=temp_set
+    LSTM_last_input=temp_set
     # print (LSTM_test_inputs)
 LSTM_test_outputs = (test_set['eth_Close'][window_len:].values/test_set['eth_Close'][:-window_len].values)-1
 
@@ -127,13 +130,13 @@ LSTM_training_inputs = np.array(LSTM_training_inputs)
  # print(LSTM_training_inputs)
 LSTM_test_inputs = [np.array(LSTM_test_inputs) for LSTM_test_inputs in LSTM_test_inputs]
 LSTM_test_inputs = np.array(LSTM_test_inputs)
-
-
+LSTM_last_input.to_csv("lastdata2.csv")
+print("created csv data file")
+LSTM_last_input = LSTM_test_inputs[-1]
+LSTM_last_input.shape = (1,10,8)
 
 np.random.seed(202)
 
-eth_model = build_model(LSTM_training_inputs, output_size=1, neurons = 20)
-bt_model = eth_model
 # model output is next price normalised to 10th previous closing price
 # LSTM_training_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
 # train model on data
@@ -143,46 +146,46 @@ bt_model = eth_model
 #                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 print("this is eth_Close model")
 LSTM_training_eth_Close_outputs = (training_set['eth_Close'][window_len:].values/training_set['eth_Close'][:-window_len].values)-1
-eth_Close_model =eth_model
-eth_history = eth_Close_model.fit(LSTM_training_inputs, LSTM_training_eth_Close_outputs, 
+eth_Close_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+eth_Close_model.fit(LSTM_training_inputs, LSTM_training_eth_Close_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 print("this is eth_Volume model")
 LSTM_training_eth_Volume_outputs = (training_set['eth_Volume'][window_len:].values/training_set['eth_Volume'][:-window_len].values)-1
-eth_Volume_model =eth_model
-eth_history = eth_Volume_model.fit(LSTM_training_inputs, LSTM_training_eth_Volume_outputs, 
+eth_Volume_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+eth_Volume_model.fit(LSTM_training_inputs, LSTM_training_eth_Volume_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-# LSTM_training_eth_close_off_high_outputs = (training_set['eth_close_off_high'][window_len:].values/training_set['eth_close_off_high'][:-window_len].values)-1
-# eth_close_off_high_model =eth_model
-# eth_history = eth_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_eth_close_off_high_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
+LSTM_training_eth_close_off_high_outputs = (training_set['eth_close_off_high'][window_len:].values/training_set['eth_close_off_high'][:-window_len].values)-1
+eth_close_off_high_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+eth_history = eth_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_eth_close_off_high_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
 print("this is eth_volatility model")
 LSTM_training_eth_volatility_outputs = (training_set['eth_volatility'][window_len:].values/training_set['eth_volatility'][:-window_len].values)-1
-eth_volatility_model =eth_model
-eth_history = eth_volatility_model.fit(LSTM_training_inputs, LSTM_training_eth_volatility_outputs, 
+eth_volatility_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+eth_volatility_model.fit(LSTM_training_inputs, LSTM_training_eth_volatility_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 print("this is bt_Close model")
 LSTM_training_bt_Close_outputs = (training_set['bt_Close'][window_len:].values/training_set['bt_Close'][:-window_len].values)-1
-bt_Close_model =bt_model
-bt_history = bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
+bt_Close_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 print("this is bt_Volume model")
 LSTM_training_bt_Volume_outputs = (training_set['bt_Volume'][window_len:].values/training_set['bt_Volume'][:-window_len].values)-1
-bt_Volume_model =bt_model
-bt_history = bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
+bt_Volume_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
-# LSTM_training_bt_close_off_high_outputs = (training_set['bt_close_off_high'][window_len:].values/training_set['bt_close_off_high'][:-window_len].values)-1
-# bt_close_off_high_model =bt_model
-# bt_history = bt_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_bt_close_off_high_outputs, 
-#                             epochs=10, batch_size=1, verbose=2, shuffle=True)
-# print("this is bt_volatility model")
+LSTM_training_bt_close_off_high_outputs = (training_set['bt_close_off_high'][window_len:].values/training_set['bt_close_off_high'][:-window_len].values)-1
+bt_close_off_high_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+bt_history = bt_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_bt_close_off_high_outputs, 
+                            epochs=10, batch_size=1, verbose=2, shuffle=True)
+print("this is bt_volatility model")
 LSTM_training_bt_volatility_outputs = (training_set['bt_volatility'][window_len:].values/training_set['bt_volatility'][:-window_len].values)-1
-bt_volatility_model =bt_model
-bt_history = bt_volatility_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
+bt_volatility_model =build_model(LSTM_training_inputs, output_size=1, neurons = 20)
+bt_volatility_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 
@@ -239,8 +242,6 @@ with open(model_output, "w") as json_file:
 print("Saved model to disk")
 
 
-LSTM_last_input = LSTM_test_inputs[-1]
-LSTM_last_input.shape = (1,10,8)
 
 New_input = LSTM_last_input
 # print(New_input)
