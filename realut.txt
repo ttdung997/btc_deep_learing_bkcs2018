@@ -1,23 +1,20 @@
-LSTM_training_bt_Close_outputs = (training_set['bt_Close'][window_len:].values/training_set['bt_Close'][:-window_len].values)-1
-bt_Close_model =bt_model
-bt_history = bt_Close_model.fit(LSTM_training_inputs, LSTM_training_bt_Close_outputs, 
-                            epochs=10, batch_size=1, verbose=2, shuffle=True)
+    i=0
+    while i<365:
+        eth_Close_predict = btc_predict.predict(data,eth_Close_model_id)
+        eth_Volume_predict = btc_predict.predict(data,eth_Volume_model_id)
+        eth_close_off_high_predict = btc_predict.predict(data,eth_close_off_high_model_id)
+        eth_volatility_predict = btc_predict.predict(data,eth_volatility_model_id)
+        bt_Close_predict = btc_predict.predict(data,bt_Close_model_id)
+        bt_Volume_predict = btc_predict.predict(data,bt_Volume_model_id)
+        bt_close_off_high_predict = btc_predict.predict(data,bt_close_off_high_model_id)
+        bt_volatility_predict = btc_predict.predict(data,bt_volatility_model_id)
 
+        predict.append(eth_Close_predict)
 
-LSTM_training_bt_Volume_outputs = (training_set['bt_Volume'][window_len:].values/training_set['bt_Volume'][:-window_len].values)-1
-bt_Volume_model =bt_model
-bt_history = bt_Volume_model.fit(LSTM_training_inputs, LSTM_training_bt_Volume_outputs, 
-                            epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-LSTM_training_bt_close_off_high_outputs = (training_set['bt_close_off_high'][window_len:].values/training_set['bt_close_off_high'][:-window_len].values)-1
-bt_close_off_high_model =bt_model
-bt_history = bt_close_off_high_model.fit(LSTM_training_inputs, LSTM_training_bt_close_off_high_outputs, 
-                            epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-LSTM_training_bt_volatility_outputs = (training_set['bt_volatility'][window_len:].values/training_set['bt_volatility'][:-window_len].values)-1
-bt_volatility_model =bt_model
-bt_history = bt_volatilitybt_close_model.fit(LSTM_training_inputs, LSTM_training_bt_volatility_outputs, 
-                            epochs=10, batch_size=1, verbose=2, shuffle=True)
-
-
-
+        data= np.delete(data[0], 0,0)
+        last_row = np.array([eth_Close_predict[0][0], eth_Volume_predict[0][0] 
+                            , eth_close_off_high_predict[0][0] , eth_volatility_predict[0][0] 
+                            , bt_Close_predict[0][0] , bt_Volume_predict[0][0] 
+                            , bt_close_off_high_predict[0][0] , bt_volatility_predict[0][0] ])
+        data = np.concatenate((data, [last_row]), axis=0)
+        data.shape = (1,10,8)

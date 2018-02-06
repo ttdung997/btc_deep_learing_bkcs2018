@@ -205,6 +205,14 @@ with open(model_output, "w") as json_file:
         # serialize weights to HDF5
         eth_Volume_model.save_weights(weight_output)
 
+model_json = eth_close_off_high_model.to_json()
+model_output = "eth_close_off_high_model.json"
+weight_output = "eth_close_off_high_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        eth_close_off_high_model.save_weights(weight_output)
+
 model_json = eth_volatility_model.to_json()
 model_output = "eth_volatility_model.json"
 weight_output = "eth_volatility_model.h5"
@@ -228,6 +236,14 @@ with open(model_output, "w") as json_file:
         json_file.write(model_json)
         # serialize weights to HDF5
         bt_Volume_model.save_weights(weight_output)
+
+model_json = bt_close_off_high_model.to_json()
+model_output = "bt_close_off_high_model.json"
+weight_output = "bt_close_off_high_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        bt_close_off_high_model.save_weights(weight_output)
 
 model_json = bt_volatility_model.to_json()
 model_output = "bt_volatility_model.json"
@@ -266,7 +282,8 @@ New_input[0][9][0] = New_eth_Close
 
 New_input[0][9][1] = New_eth_Volume
 
-New_input[0][9][2] = -0.560641
+New_input[0][9][2] = eth_close_off_high_model.predict(LSTM_last_input)
+
 
 New_input[0][9][3] = New_eth_volatilityeth
 
@@ -274,12 +291,13 @@ New_input[0][9][4] = New_bt_Close
 
 New_input[0][9][5] = New_bt_Volume
 
-New_input[0][9][6] = -0.560641
+New_input[0][9][6] = bt_close_off_high_model.predict(LSTM_last_input)
+
 
 New_input[0][9][7] =New_bt_volatilitybt_close
 
-print(New_input)
-print(eth_Close_model.predict(New_input))
+# print(New_input)
+print(eth_Close_model.predict(LSTM_test_inputs))
 
 
 # # print(LSTM_test_inputs[-1])
