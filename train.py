@@ -186,6 +186,57 @@ bt_history = bt_volatility_model.fit(LSTM_training_inputs, LSTM_training_bt_vola
                             epochs=10, batch_size=1, verbose=2, shuffle=True)
 
 
+model_json = eth_Close_model.to_json()
+model_output = "eth_Close_model.json"
+weight_output = "eth_Close_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        eth_Close_model.save_weights(weight_output)
+
+model_json = eth_Volume_model.to_json()
+model_output = "eth_Volume_model.json"
+weight_output = "eth_Volume_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        eth_Volume_model.save_weights(weight_output)
+
+model_json = eth_volatility_model.to_json()
+model_output = "eth_volatility_model.json"
+weight_output = "eth_volatility_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        eth_volatility_model.save_weights(weight_output)
+
+model_json = bt_Close_model.to_json()
+model_output = "bt_Close_model.json"
+weight_output = "bt_Close_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        bt_Close_model.save_weights(weight_output)
+
+model_json = bt_Volume_model.to_json()
+model_output = "bt_Volume_model.json"
+weight_output = "bt_Volume_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        bt_Volume_model.save_weights(weight_output)
+
+model_json = bt_volatility_model.to_json()
+model_output = "bt_volatility_model.json"
+weight_output = "bt_volatility_model.h5"
+with open(model_output, "w") as json_file:
+        json_file.write(model_json)
+        # serialize weights to HDF5
+        bt_volatility_model.save_weights(weight_output)
+
+
+
+print("Saved model to disk")
 
 
 LSTM_last_input = LSTM_test_inputs[-1]
